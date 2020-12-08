@@ -1,8 +1,14 @@
 {
-    "mikegia": {
-        "Password": "Pa$$word1",
-        "Name": "Michael Giannella",
-        "DOB": "05/13/1999",
-        "SSN": "111223333"
-    }
+  "mikegia": {
+    "Password": "Pa$$word1",
+    "Name": "Michael Giannella",
+    "DOB": "05/13/1999",
+    "SSN": "111223333"
+  },
+  "test": {
+    "Password": "Test1@",
+    "Name": "test",
+    "DOB": "00/00/0000",
+    "SSN": "123456789"
+  }
 }
