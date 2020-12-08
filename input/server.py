@@ -16,6 +16,8 @@ aes_iv = aes_key_iv[32:]
 app = Flask(__name__)
 
 def process_vote(voteJSON):
+    print("VOTE: ")
+    print(voteJSON)
     # print(voteJSON["SessionID"])
     # print(voteJSON["Votes"]["President"])
     # print(voteJSON["Votes"]["NJ State Senator"])
@@ -34,14 +36,47 @@ def process_vote(voteJSON):
         # we match their SSN & DOB
     users_jda = JsonDataAccess("users.json")
     userInfo = users_jda.search(username)
-    print(userInfo)
-    
+    # print("USER INFO FROM USERS.JSON: ")
+    # print(userInfo)
 
+    # TODO: get user info from VOTE (data) input, match
+    
+    # Vote Input ==> votes.json
     votes_jda = JsonDataAccess("votes.json")
-    if votes_jda.search("President") is None:
+    president_arr = votes_jda.search("President")
+    senator_arr = votes_jda.search("NJ State Senator")
+    
+    # (One-time) votes.json setup
+    if (president_arr is None):
         votes_jda.insert([], "President")
         votes_jda.insert([], "NJ State Senator")
+        president_arr = votes_jda.search("President")
+        senator_arr = votes_jda.search("NJ State Senator")
 
+    presChoice = voteJSON["Votes"]["President"]
+    senChoice = voteJSON["Votes"]["NJ State Senator"]
+    
+    if presChoice == "1":
+        president_arr.append((username,"Donald Trump"))
+    else: # presChoice == "2":
+        president_arr.append((username, "Joe Biden"))   
+    votes_jda.update(president_arr, "President")
+
+    if senChoice == "1":
+        senator_arr.append((username, "Cory Booker"))
+    elif senChoice == "2":
+        senator_arr.append((username, "Lawrence Hamm"))
+    elif senChoice == "3":
+        senator_arr.append((username, "Eugene Anagnos"))
+    elif senChoice == "4":
+        senator_arr.append((username, "Tricia Flanagan"))
+    elif senChoice == "5":
+        senator_arr.append((username, "Rik Mehta"))
+    elif senChoice == "6":
+        senator_arr.append((username, "Natalie Rivera"))
+    else: # senChoice == "7":
+        senator_arr.append((username, "Hirsh Singh"))
+    votes_jda.update(senator_arr, "NJ State Senator")
 
 @app.route('/vote', methods = ['POST'])
 def receive_vote():
